@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
-
+import DayComponent from './DayComponent';
 
 let calendarDate = moment();
 
@@ -15,19 +15,16 @@ class CalendarComponent extends Component {
     };
   }
 
-
-
   render() {
     return (
       <View style={{ flex: 1 }}>
         <Calendar
           current={this.state.calendarDate}
-          
+          dayComponent= {DayComponent}
           headerData={{
-            calendarDate: calendarDate.format('DD MMM, YYYY')
+            calendarDate: calendarDate.format('MMM, YYYY')
           }}
           style={{
-              marginTop: 200,
               paddingLeft: 0, 
               paddingRight: 0
           }}

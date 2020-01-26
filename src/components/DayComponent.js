@@ -1,11 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, Modal } from 'react-native';
 import PropTypes from 'prop-types';
+
 
 class DayComponent extends React.Component {
   constructor(props) {
     super(props);
     this.onDayPress = this.onDayPress.bind(this);
+    this.state = {
+      modalVisible: false,
+    };
   }
 
   getContentStyle() {
@@ -30,9 +34,19 @@ class DayComponent extends React.Component {
     return style;
   }
 
-  
+  openModal() {
+    this.setState({modalVisible:true});
+  }
+
+  closeModal() {
+    this.setState({modalVisible:false});
+  }
+
 
   onDayPress() {
+    if(this.props.state !== 'disabled'){
+      this.setState({modalVisible: true});
+    }
     this.props.onPress(this.props.date);
   }
 
@@ -41,6 +55,22 @@ class DayComponent extends React.Component {
 
     return (
       <View style={styles.container}>
+        <Modal
+              visible={this.state.modalVisible}
+              animationType={'slide'}
+              onRequestClose={() => this.closeModal()}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.innerContainer}>
+                <Text>{this.props.date.dateString}</Text>
+                <Button
+                    onPress={() => this.closeModal()}
+                    title="Close modal"
+                >
+                </Button>
+              </View>
+            </View>
+          </Modal>
         <TouchableOpacity
           style={[styles.content, contentStyle.content]}
           onPress={this.onDayPress}
@@ -48,8 +78,12 @@ class DayComponent extends React.Component {
           <Text style={[styles.contentText, contentStyle.text]}>
             {String(this.props.children)}
           </Text>
+          
         </TouchableOpacity>
+        
       </View>
+      
+      
     );
   }
 }
@@ -74,7 +108,15 @@ const styles = StyleSheet.create({
   contentText: {
     fontSize: 12,
     marginRight: 30
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  innerContainer: {
+    alignItems: 'center',
+  },
 });
 
 export default DayComponent;

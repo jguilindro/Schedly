@@ -11,6 +11,7 @@ class ReminderComponent extends React.Component {
     return (
       <View style={{ backgroundColor: this.props.reminder.color }}>
         <Text style={{ color: "#fff" }}>{this.props.reminder.description}</Text>
+        <Text style={{ color: "#fff" }}>{this.props.reminder.city}</Text>
         <Text style={{ color: "#fff" }}>{this.props.reminder.time}</Text>
         <TouchableOpacity
           onPress={() => this.props.handleDeleteReminder(this.props.reminder.id)}
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     fontSize: 12,
     paddingLeft: 3,
-    marginBottom: 3
+    marginBottom: 3,
   }
 });
 

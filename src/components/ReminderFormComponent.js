@@ -20,6 +20,7 @@ class ReminderFormComponent extends React.Component {
       editReminder: {
         id: null,
         time: null,
+        city: null,
         description: null,
         color: defaultColor
       }
@@ -57,6 +58,15 @@ class ReminderFormComponent extends React.Component {
     });
   }
 
+  setCity(text) {
+    this.setState({
+      editReminder: {
+        ...this.state.editReminder,
+        city: text
+      }
+    });
+  }
+
   show = mode => {
     this.setState({
       show: true,
@@ -84,6 +94,7 @@ class ReminderFormComponent extends React.Component {
       const payload = {
         date: this.props.date.dateString,
         time: this.state.editReminder.time,
+        city: this.state.editReminder.city,
         description: description,
         color: this.state.editReminder.color || defaultColor
       };
@@ -109,6 +120,12 @@ class ReminderFormComponent extends React.Component {
           maxLength={30}
           value={this.props.reminder.description}
           onChangeText={text => this.setDescription(text)}
+        />
+        <TextInput
+          placeholder="City"
+          maxLength={30}
+          value={this.props.reminder.city}
+          onChangeText={text => this.setCity(text)}
         />
         <TouchableOpacity
           onPress={this.timepicker}

@@ -7,6 +7,7 @@ const createReminder = (prevState, action) => {
   const reminder = {
     id: uniqueId(),
     time: action.reminder.time,
+    city: action.reminder.city,
     description: action.reminder.description,
     color: action.reminder.color
   };
@@ -25,6 +26,7 @@ const updateReminder = (prevState, action) => {
       reminder = {
         id: reminder.id,
         time: action.reminder.time,
+        city: action.reminder.city,
         description: action.reminder.description,
         color: action.reminder.color
       };

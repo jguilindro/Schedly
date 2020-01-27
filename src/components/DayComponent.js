@@ -63,7 +63,7 @@ class DayComponent extends React.Component {
   }
 
   handleDeleteReminder = id => {
-    this.props.deleteReminder(this.props.date, id);
+    this.props.deleteReminder(this.props.date.dateString, id);
   };
 
   render() {

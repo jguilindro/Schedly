@@ -17,6 +17,7 @@ class DayComponent extends React.Component {
     this.onDayPress = this.onDayPress.bind(this);
     this.state = {
       modalVisible: false,
+      modalAddReminderVisible: false,
       editReminder: {
         id: null,
         time: null,
@@ -55,6 +56,14 @@ class DayComponent extends React.Component {
     this.setState({ modalVisible: false });
   }
 
+  openModalReminder() {
+    this.setState({ modalAddReminderVisible: true });
+  }
+
+  closeModalReminder() {
+    this.setState({ modalAddReminderVisible: false });
+  }
+
   onDayPress() {
     if (this.props.state !== 'disabled') {
       this.setState({ modalVisible: true });
@@ -79,15 +88,17 @@ class DayComponent extends React.Component {
           <View style={styles.modalContainer}>
             <View style={styles.innerContainer}>
               <Text>{this.props.date.dateString}</Text>
+
+              {!reminders.length ? (
               <ReminderForm
                 reminder={this.state.editReminder}
                 date={this.props.date}
                 handleCreateUpdateReminder={this.handleCreateUpdateReminder}
                 defaultColor={defaultColor}
               />
-              <React.Fragment>
-                {reminders.length
-                  ? reminders.map((reminder, i) => {
+              ):(
+                <React.Fragment>
+                {reminders.map((reminder, i) => {
                     return (
                       <Reminder
                         key={i}
@@ -96,12 +107,49 @@ class DayComponent extends React.Component {
                       />
                     );
                   })
-                  : null}
+                  }
               </React.Fragment>
+              
+              )}
+              
             </View>
-            <View style={styles.btnNewReminder}>
+            <View style={styles.btnClose}>
               <Button
                 onPress={() => this.closeModal()}
+                title="Close"
+              >
+              </Button>
+            </View>
+            {reminders.length ? (
+            <View style={styles.btnNewReminder}>
+              <Button
+                onPress={() => this.openModalReminder()}
+                title="Add Reminder"
+              >
+              </Button>
+            </View>)
+            : null }
+          </View>
+        </Modal>
+
+        <Modal
+          visible={this.state.modalAddReminderVisible}
+          animationType={'slide'}
+          onRequestClose={() => this.closeModalReminder()}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.innerContainer}>
+              <Text>{this.props.date.dateString}</Text>
+              <ReminderForm
+                reminder={this.state.editReminder}
+                date={this.props.date}
+                handleCreateUpdateReminder={this.handleCreateUpdateReminder}
+                defaultColor={defaultColor}
+              /> 
+            </View>
+            <View style={styles.btnClose}>
+              <Button
+                onPress={() => this.closeModalReminder()}
                 title="Close"
               >
               </Button>
@@ -168,6 +216,11 @@ const styles = StyleSheet.create({
   btnNewReminder: {
     position: 'absolute',
     right: 50,
+    bottom: 50,
+  },
+  btnClose: {
+    position: 'absolute',
+    left: 50,
     bottom: 50,
   }
 });

@@ -94,6 +94,7 @@ class DayComponent extends React.Component {
               <ReminderForm
                 reminder={this.state.editReminder}
                 date={this.props.date}
+                hideReminderModal= {this.closeModalReminder}
                 handleCreateUpdateReminder={this.handleCreateUpdateReminder}
                 defaultColor={defaultColor}
               />

@@ -130,7 +130,7 @@ class ReminderFormComponent extends React.Component {
         {showColorPicker && <ColorPalette
           onChange={color => this.setColor(color)}
           value={this.state.color}
-          colors={['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9']}
+          colors={['#C0392B', '#8E44AD', '#2980B9', '#009a00', '#ff7518', '#fbd01e']}
         />
         }
         <TouchableHighlight

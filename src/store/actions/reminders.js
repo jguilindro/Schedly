@@ -1,6 +1,5 @@
 import * as actionTypes from "./actionTypes";
 
-// Action creators
 const createReminderAction = reminder => {
   return {
     type: actionTypes.CREATE_REMINDER,
@@ -23,7 +22,6 @@ const deleteReminderAction = (date, id) => {
   };
 };
 
-// Actions
 export const createReminder = payload => {
   return dispatch => {
     dispatch(createReminderAction(payload));

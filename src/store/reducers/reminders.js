@@ -4,13 +4,25 @@ import uniqueId from "uuid";
 const initialState = {};
 
 const createReminder = (prevState, action) => {
-  const reminder = {
-    id: uniqueId(),
-    time: action.reminder.time,
-    city: action.reminder.city,
-    description: action.reminder.description,
-    color: action.reminder.color
-  };
+  const testId="0";
+  let reminder;
+  if(action.reminder.test){
+    reminder = {
+      id: testId,
+      time: action.reminder.time,
+      city: action.reminder.city,
+      description: action.reminder.description,
+      color: action.reminder.color
+    };
+  } else {
+    reminder = {
+      id: uniqueId(),
+      time: action.reminder.time,
+      city: action.reminder.city,
+      description: action.reminder.description,
+      color: action.reminder.color
+    };
+  }
   return {
     ...prevState,
     [action.reminder.date]: prevState[action.reminder.date]

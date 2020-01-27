@@ -18,7 +18,9 @@ class ReminderComponent extends React.Component {
         >
           <Text>{"Delete"}</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+        onPress={() => this.props.handleEditReminder(this.props.reminder)}
+        >
           <Text>{"Edit"}</Text>
         </TouchableOpacity>
       </View>

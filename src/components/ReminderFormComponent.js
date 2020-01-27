@@ -2,11 +2,8 @@
 import React from "react";
 import TimePicker from '@react-native-community/datetimepicker';
 import ColorPalette from 'react-native-color-palette';
-import { connect } from 'react-redux';
 import { View, TouchableOpacity, Text, TextInput, TouchableHighlight } from 'react-native';
-import * as actions from "../store/actions";
 
-const defaultColor = "#000";
 class ReminderFormComponent extends React.Component {
 
   constructor(props) {
@@ -16,62 +13,24 @@ class ReminderFormComponent extends React.Component {
       date: new Date('2020-06-12T14:42:42'),
       mode: 'time',
       show: false,
-      showColorPicker: false,
-      editReminder: {
-        id: null,
-        time: null,
-        city: null,
-        description: null,
-        color: defaultColor
-      }
-
+      showColorPicker: false
     }
   };
-
-  setDate = (event, date) => {
-    date = date || this.state.date;
-    this.setState({
-      show: Platform.OS === 'ios' ? true : false,
-      date: date,
-      editReminder: {
-        ...this.state.editReminder,
-        time: date.toTimeString()
-      }
-    });
-  }
-
-  setColor = (color) => {
-    this.setState({
-      editReminder: {
-        ...this.state.editReminder,
-        color: color
-      }
-    });
-  }
-
-  setDescription(text) {
-    this.setState({
-      editReminder: {
-        ...this.state.editReminder,
-        description: text
-      }
-    });
-  }
-
-  setCity(text) {
-    this.setState({
-      editReminder: {
-        ...this.state.editReminder,
-        city: text
-      }
-    });
-  }
 
   show = mode => {
     this.setState({
       show: true,
       mode,
     });
+  }
+
+  setDate = (event, date) => {
+    date = date || this.state.date;
+    this.setState({
+      show: Platform.OS === 'ios' ? true : false,
+      date: date
+    });
+    this.props.setTime(date.toTimeString());
   }
 
   showColorPicker = () => {
@@ -88,29 +47,6 @@ class ReminderFormComponent extends React.Component {
     this.showColorPicker();
   }
 
-  handleCreateUpdateReminder = (update) => {
-    const description = this.state.editReminder.description;
-    if (description.length) {
-      const payload = {
-        date: this.props.date.dateString,
-        time: this.state.editReminder.time,
-        city: this.state.editReminder.city,
-        description: description,
-        color: this.state.editReminder.color || defaultColor
-      };
-
-      if (update.id) {
-        payload["id"] = update.id;
-        this.props.updateReminder(payload);
-      } else {
-        this.props.createReminder(payload);
-      }
-      //this.props.handleSetEditDay(null);
-      this.setState({ editReminder: {} });
-      this.props.hideReminderModal();
-    }
-  };
-
   render() {
     const { show, date, mode, showColorPicker } = this.state;
     return (
@@ -119,18 +55,18 @@ class ReminderFormComponent extends React.Component {
           placeholder="Reminder"
           maxLength={30}
           value={this.props.reminder.description}
-          onChangeText={text => this.setDescription(text)}
+          onChangeText={text => this.props.setDescription(text)}
         />
         <TextInput
           placeholder="City"
           maxLength={30}
           value={this.props.reminder.city}
-          onChangeText={text => this.setCity(text)}
+          onChangeText={text => this.props.setCity(text)}
         />
         <TouchableOpacity
           onPress={this.timepicker}
         >
-          <Text>Time: {this.state.date.toTimeString()}</Text>
+          <Text>Time: {this.props.reminder.time}</Text>
         </TouchableOpacity>
         {show && <TimePicker value={date}
           mode={mode}
@@ -142,41 +78,25 @@ class ReminderFormComponent extends React.Component {
         <TouchableOpacity
           onPress={this.colorpicker}
         >
-          <Text>Color: {this.state.editReminder.color}</Text>
+          <Text>Color: {this.props.reminder.color}</Text>
         </TouchableOpacity>
         {showColorPicker && <ColorPalette
-          onChange={color => this.setColor(color)}
+          onChange={color => this.props.setColor(color)}
           value={this.state.color}
           colors={['#C0392B', '#8E44AD', '#2980B9', '#009a00', '#ff7518', '#fbd01e']}
         />
         }
         <TouchableHighlight
-        style= {{alignItems: 'center', backgroundColor: '#DDDDDD'}}
-          onPress={e => this.handleCreateUpdateReminder(this.props.reminder)}
+          style={{ alignItems: 'center', backgroundColor: '#DDDDDD' }}
+          onPress={e => this.props.handleCreateUpdateReminder(this.props.reminder)}
         >
-          <Text style={{fontSize: 15, fontWeight: 'bold'}}>Save</Text>
+          <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Save</Text>
         </TouchableHighlight>
       </View >
     );
   }
 
 };
-const mapStateToProps = state => {
-  return {
-    reminders: state
-  };
-};
 
-const mapDispatchToProps = dispatch => {
-  return {
-    createReminder: payload => dispatch(actions.createReminder(payload)),
-    updateReminder: payload => dispatch(actions.updateReminder(payload)),
-    deleteReminder: (date, id) => dispatch(actions.deleteReminder(date, id))
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReminderFormComponent);
+export default ReminderFormComponent;
 

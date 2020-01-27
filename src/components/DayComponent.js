@@ -4,17 +4,19 @@ import { View, Text, StyleSheet, Button, TouchableOpacity, Modal } from 'react-n
 import PropTypes from 'prop-types';
 import * as actions from "../store/actions";
 import ReminderForm from "./ReminderFormComponent";
-import Reminder from "./ReminderComponent";
+import ReminderComponent from "./ReminderComponent";
 import ReminderText from "./ReminderTextComponent";
 import _sortBy from "lodash/sortBy";
-
 
 const defaultColor = "#000";
 
 class DayComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.closeModalReminder = this.closeModalReminder.bind(this)
+    this.setTime = this.setTime.bind(this);
+    this.setCity = this.setCity.bind(this);
+    this.setDescription = this.setDescription.bind(this);
+    this.setColor = this.setColor.bind(this);
     this.onDayPress = this.onDayPress.bind(this);
     this.state = {
       modalVisible: false,
@@ -22,6 +24,7 @@ class DayComponent extends React.Component {
       editReminder: {
         id: null,
         time: null,
+        city: null,
         description: null,
         color: defaultColor
       }
@@ -72,6 +75,74 @@ class DayComponent extends React.Component {
     this.props.onPress(this.props.date);
   }
 
+  setTime = (time) => {
+    this.setState({
+      editReminder: {
+        ...this.state.editReminder,
+        time: time
+      }
+    })
+  }
+
+  setColor = (color) => {
+    this.setState({
+      editReminder: {
+        ...this.state.editReminder,
+        color: color
+      }
+    });
+  }
+
+  setDescription(text) {
+    this.setState({
+      editReminder: {
+        ...this.state.editReminder,
+        description: text
+      }
+    });
+  }
+
+  setCity(text) {
+    this.setState({
+      editReminder: {
+        ...this.state.editReminder,
+        city: text
+      }
+    });
+  }
+
+  handleCreateUpdateReminder = (update) => {
+    const description = this.state.editReminder.description;
+    if (description.length) {
+      const payload = {
+        date: this.props.date.dateString,
+        time: this.state.editReminder.time,
+        city: this.state.editReminder.city,
+        description: description,
+        color: this.state.editReminder.color || defaultColor
+      };
+
+      if (update.id) {
+        payload["id"] = update.id;
+        this.props.updateReminder(payload);
+      } else {
+        this.props.createReminder(payload);
+      }
+      this.setState({ editReminder: {} });
+      this.closeModalReminder();
+    }
+  };
+
+  handleEditReminder = reminder => {
+    this.setState({
+      editReminder: {
+        ...this.state.editReminder,
+        ...reminder
+      }
+    });
+    this.openModalReminder();
+  };
+
   handleDeleteReminder = id => {
     this.props.deleteReminder(this.props.date.dateString, id);
   };
@@ -88,32 +159,36 @@ class DayComponent extends React.Component {
         >
           <View style={styles.modalContainer}>
             <View style={styles.innerContainer}>
-              <Text>{this.props.date.dateString}</Text>
+              <Text style={styles.dayText}>{this.props.date.dateString}</Text>
 
               {!reminders.length ? (
-              <ReminderForm
-                reminder={this.state.editReminder}
-                date={this.props.date}
-                hideReminderModal= {this.closeModalReminder}
-                handleCreateUpdateReminder={this.handleCreateUpdateReminder}
-                defaultColor={defaultColor}
-              />
-              ):(
-                <React.Fragment>
-                {reminders.map((reminder, i) => {
-                    return (
-                      <Reminder
-                        key={i}
-                        reminder={reminder}
-                        handleDeleteReminder={this.handleDeleteReminder}
-                      />
-                    );
-                  })
-                  }
-              </React.Fragment>
-              
-              )}
-              
+                <ReminderForm
+                  reminder={this.state.editReminder}
+                  date={this.props.date}
+                  setTime={this.setTime}
+                  setCity={this.setCity}
+                  setDescription={this.setDescription}
+                  setColor={this.setColor}
+                  handleCreateUpdateReminder={this.handleCreateUpdateReminder}
+                  defaultColor={defaultColor}
+                />
+              ) : (
+                  <React.Fragment>
+                    {reminders.map((reminder, i) => {
+                      return (
+                        <ReminderComponent
+                          key={i}
+                          reminder={reminder}
+                          handleEditReminder={this.handleEditReminder}
+                          handleDeleteReminder={this.handleDeleteReminder}
+                        />
+                      );
+                    })
+                    }
+                  </React.Fragment>
+
+                )}
+
             </View>
             <View style={styles.btnClose}>
               <Button
@@ -123,14 +198,14 @@ class DayComponent extends React.Component {
               </Button>
             </View>
             {reminders.length ? (
-            <View style={styles.btnNewReminder}>
-              <Button
-                onPress={() => this.openModalReminder()}
-                title="Add Reminder"
-              >
-              </Button>
-            </View>)
-            : null }
+              <View style={styles.btnNewReminder}>
+                <Button
+                  onPress={() => this.openModalReminder()}
+                  title="Add Reminder"
+                >
+                </Button>
+              </View>)
+              : null}
           </View>
         </Modal>
 
@@ -144,11 +219,14 @@ class DayComponent extends React.Component {
               <Text>{this.props.date.dateString}</Text>
               <ReminderForm
                 reminder={this.state.editReminder}
-                hideReminderModal= {this.closeModalReminder}
                 date={this.props.date}
+                setTime={this.setTime}
+                setCity={this.setCity}
+                setDescription={this.setDescription}
+                setColor={this.setColor}
                 handleCreateUpdateReminder={this.handleCreateUpdateReminder}
                 defaultColor={defaultColor}
-              /> 
+              />
             </View>
             <View style={styles.btnClose}>
               <Button
@@ -203,6 +281,10 @@ const styles = StyleSheet.create({
   content: {
     width: 50,
     height: 105,
+  },
+  dayText:{
+    fontSize: 25,
+    fontWeight: 'bold'
   },
   contentText: {
     fontSize: 12,

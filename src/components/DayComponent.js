@@ -14,6 +14,7 @@ const defaultColor = "#000";
 class DayComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.closeModalReminder = this.closeModalReminder.bind(this)
     this.onDayPress = this.onDayPress.bind(this);
     this.state = {
       modalVisible: false,
@@ -142,6 +143,7 @@ class DayComponent extends React.Component {
               <Text>{this.props.date.dateString}</Text>
               <ReminderForm
                 reminder={this.state.editReminder}
+                hideReminderModal= {this.closeModalReminder}
                 date={this.props.date}
                 handleCreateUpdateReminder={this.handleCreateUpdateReminder}
                 defaultColor={defaultColor}

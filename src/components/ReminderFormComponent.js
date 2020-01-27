@@ -3,7 +3,7 @@ import React from "react";
 import TimePicker from '@react-native-community/datetimepicker';
 import ColorPalette from 'react-native-color-palette';
 import { connect } from 'react-redux';
-import { View, TouchableOpacity, Text, TextInput } from 'react-native';
+import { View, TouchableOpacity, Text, TextInput, TouchableHighlight } from 'react-native';
 import * as actions from "../store/actions";
 
 const defaultColor = "#000";
@@ -96,6 +96,7 @@ class ReminderFormComponent extends React.Component {
       }
       //this.props.handleSetEditDay(null);
       this.setState({ editReminder: {} });
+      this.props.hideReminderModal();
     }
   };
 
@@ -132,14 +133,12 @@ class ReminderFormComponent extends React.Component {
           colors={['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9']}
         />
         }
-        <TouchableOpacity
+        <TouchableHighlight
+        style= {{alignItems: 'center', backgroundColor: '#DDDDDD'}}
           onPress={e => this.handleCreateUpdateReminder(this.props.reminder)}
         >
-          <Text>Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text>Cancel</Text>
-        </TouchableOpacity>
+          <Text style={{fontSize: 15, fontWeight: 'bold'}}>Save</Text>
+        </TouchableHighlight>
       </View >
     );
   }

@@ -68,8 +68,7 @@ class DayComponent extends React.Component {
 
   render() {
     const contentStyle = this.getContentStyle();
-    const reminders = _sortBy(this.props.reminders[this.props.date], "time") || [];
-    //alert(this.props.date.day)
+    const reminders = _sortBy(this.props.reminders[this.props.date.dateString], "time") || [];
     return (
       <View style={styles.container}>
         <Modal

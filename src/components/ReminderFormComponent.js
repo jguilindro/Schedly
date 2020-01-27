@@ -80,10 +80,9 @@ class ReminderFormComponent extends React.Component {
 
   handleCreateUpdateReminder = (update) => {
     const description = this.state.editReminder.description;
-
     if (description.length) {
       const payload = {
-        date: this.props.date,
+        date: this.props.date.dateString,
         time: this.state.editReminder.time,
         description: description,
         color: this.state.editReminder.color || defaultColor
